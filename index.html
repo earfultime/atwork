@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earfultime Intern Life</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Playpen+Sans:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #fefaf9;
+            --card-bg: #ffffff;
+            --text-color: #53371e;
+            --accent-color: #42a5fd;
+            --accent-hover: #258be0;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+            --stat-bg: #bad9eb;
+            --border-color: #cfb59e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+
+        .game-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(83, 55, 30, 0.08);
+            border: 3px solid var(--border-color);
+        }
+
+        #setup-screen {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Playpen Sans', cursive;
+            font-weight: 700;
+            font-size: 2.8rem;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px var(--border-color);
+        }
+
+        h2 {
+            font-family: 'Playpen Sans', cursive;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7c5a3c;
+            font-size: 1.1rem;
+            margin-top: -5px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background-color: #ffffff;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(66, 165, 253, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Josefin Sans', sans-serif;
+            box-shadow: 0 4px 0px #258be0;
+            transition: all 0.1s ease;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0px #258be0;
+        }
+
+        button:disabled {
+            background-color: #cfb59e;
+            color: #fefaf9;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .game-layout {
+                grid-template-columns: 300px 1fr;
+            }
+            .header-zone {
+                grid-column: span 2;
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                align-content: start;
+            }
+        }
+
+        .stat-box {
+            background-color: var(--stat-bg);
+            padding: 15px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid rgba(83, 55, 30, 0.15);
+        }
+
+        @media (min-width: 768px) {
+            .stat-box {
+                text-align: left;
+                padding: 18px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #4a331d;
+        }
+
+        .stat-val {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .stat-danger {
+            background-color: #fee2e2 !important;
+            border-color: #fca5a5 !important;
+        }
+        .stat-danger .stat-val {
+            color: var(--danger-color) !important;
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-box {
+            background-color: #ffffff;
+            border: 2px solid var(--border-color);
+            border-left: 6px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            min-height: 140px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .event-box {
+            background-color: #fff5f5;
+            border: 2px dashed var(--danger-color);
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-size: 1.02rem;
+            line-height: 1.6;
+        }
+
+        .event-box.safe-event {
+            background-color: #f0fdf4;
+            border-color: var(--success-color);
+        }
+
+        .actions-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .actions-container button {
+            padding: 16px 12px;
+            font-size: 1.05rem;
+        }
+
+        .btn-work { background-color: #3b82f6; box-shadow: 0 4px 0px #1d4ed8; }
+        .btn-work:active { box-shadow: 0 0px 0px #1d4ed8; }
+        .btn-eat { background-color: #eab308; box-shadow: 0 4px 0px #a16207; }
+        .btn-eat:active { box-shadow: 0 0px 0px #a16207; }
+        .btn-rest { background-color: #22c55e; box-shadow: 0 4px 0px #15803d; }
+        .btn-rest:active { box-shadow: 0 0px 0px #15803d; }
+        .btn-snack { background-color: #ec4899; box-shadow: 0 4px 0px #be185d; }
+        .btn-snack:active { box-shadow: 0 0px 0px #be185d; }
+
+        .btn-next {
+            background-color: var(--text-color);
+            color: #ffffff;
+            box-shadow: 0 4px 0px #2a1b0e;
+            margin-top: 20px;
+        }
+        .btn-next:hover {
+            background-color: #3e2816;
+        }
+
+        .drive-link {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #22c55e;
+            color: white;
+            padding: 14px 24px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 0px #16a34a;
+            font-size: 1.1rem;
+        }
+        .drive-link:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0px #16a34a;
+        }
+
+        #end-screen {
+            text-align: center;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- SCREEN 1: REGISTER -->
+        <div id="setup-screen">
+            <h1>EARFULTIME</h1>
+            <p class="subtitle">A day in my life as The Associates</p>
+            
+            <div class="input-group">
+                <label>Nama Kamu</label>
+                <input type="text" id="player-name" placeholder="Masukkan nama kamu..." autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label>Pilih Divisi Magang</label>
+                <select id="player-divisi">
+                    <option value="Publishing">Publishing</option>
+                    <option value="Campaign">Campaign</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Content Creator">Content Creator</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="startGameNow()">Mulai Magang</button>
+        </div>
+
+        <!-- SCREEN 2: GAMEPLAY -->
+        <div id="game-screen" class="hidden">
+            <div class="game-layout">
+                <div class="header-zone">
+                    <h2 id="display-day">Hari ke-1 / 21</h2>
+                    <p class="subtitle" id="display-identity">Nama (Divisi)</p>
+                </div>
+
+                <!-- Kiri: Stats Panel -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Uang</div>
+                        <div class="stat-val" id="stat-money">50000</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Energi</div>
+                        <div class="stat-val" id="stat-energy">100 / 100</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Kekenyangan</div>
+                        <div class="stat-val" id="stat-hunger">100 / 100</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Sisa Langkah</div>
+                        <div class="stat-val" id="stat-actions" style="color: var(--accent-color);">2</div>
+                    </div>
+                </div>
+
+                <!-- Kanan: Story & Action Panel -->
+                <div class="main-panel">
+                    <div class="log-box" id="story-log">
+                        Log aktivitas...
+                    </div>
+
+                    <div class="event-box hidden" id="event-box">
+                        <strong>Aktivitas Kantor:</strong> <span id="event-text"></span>
+                    </div>
+
+                    <div id="action-board">
+                        <div class="actions-container">
+                            <button class="btn-work" id="btn-work" onclick="eksekusiAksi('work')">💼 Kerja (1x)</button>
+                            <button class="btn-eat" id="btn-eat" onclick="eksekusiAksi('eat')">🍲 Makan Besar (1x)</button>
+                            <button class="btn-rest" id="btn-rest" onclick="eksekusiAksi('rest')">🛌 Istirahat (1x)</button>
+                            <button class="btn-snack" id="btn-snack" onclick="eksekusiAksi('snack')">🏪 Jajan Sekitar (1x)</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-next hidden" id="btn-next-day" onclick="pindahHari()">Lanjut ke Hari Berikutnya ➡️</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: GAME OVER / SUCCESS -->
+        <div id="end-screen" class="hidden">
+            <h1 id="end-title">Game Over</h1>
+            <div class="log-box" id="end-message">
+                Pesan penutup selesai magang.
+            </div>
+            <div id="success-link-container"></div>
+            <br>
+            <button id="btn-restart" onclick="restartGame()">Main Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        window.gameState = {
+            name: "",
+            divisi: "",
+            day: 1,
+            money: 50000,
+            energy: 100,
+            hunger: 100,
+            actionsLeft: 2,
+            hasWorkedToday: false,
+            hasEatenToday: false,
+            hasRestedToday: false,
+            hasSnackedToday: false
+        };
+
+        var jobDescriptions = {
+            "Publishing": "menyusun draf naskah rilis bersama Laven",
+            "Campaign": "merancang strategi engagement iklan atas arahan Manisha",
+            "Finance": "membantu Kean merapikan invoice klien yang menumpuk",
+            "Content Creator": "bikin konsep video kreatif bareng Alyssa"
+        };
+
+        // Pool Event 50:50 Komposisi Seimbang (25 Negatif Super Kesal / 25 Kebaikan Councils)
+        var negativeEvents = [
+            { text: "Pak Raka tiba-tiba datang ke kubikalmu dan menggebrak meja, \"Kerja yang bener ya! Jangan malas kayak anak magang kemarin!\" Kamu stres berat.", money: 0, energy: -15, hunger: -5 },
+            { text: "Pak Raka melempar tumpukan map ke mejamu, \"Ini revisi rilis kemarin, formatnya berantakan banget. Malam ini kamu lembur tanpa kompromi!\" Kamu capek luar biasa.", money: 0, energy: -25, hunger: -10 },
+            { text: "Niatnya mau ke pantry, tapi dicegat Pak Raka, \"Mau ke mana kamu? Jam kerja malah kelayapan. Balik ke meja sekarang!\" Mood kamu langsung hancur.", money: 0, energy: -10, hunger: -5 },
+            { text: "Pak Raka nyuruh kamu beli kopi pakai uang pribadimu, \"Beliin americano es di seberang, kembaliannya ambil aja.\" Padahal uangnya pas-pasan dan gak diganti.", money: -15000, energy: -5, hunger: 0 },
+            { text: "Pak Raka sengaja menyindir hasil kerja kerasmu di grup divisi, \"Anak magang sekarang kok kinerjanya zonk banget ya.\" Mentalmu kena mental breakdance.", money: 0, energy: -20, hunger: 0 },
+            { text: "Pak Raka nyuruh kamu benerin mesin printer yang macet, \"Kamu kan anak muda, masa benerin ginian aja gak becus!\" Kamu pusing dan tanganmu kotor kena tinta.", money: 0, energy: -15, hunger: -5 },
+            { text: "Pak Raka memotong waktu makan siangmu sepihak, \"Rapat divisi dimajukan sekarang, gak ada alasan telat!\" Perutmu melilit karena terpaksa menunda makan.", money: 0, energy: -10, hunger: -20 },
+            { text: "Pak Raka lagi mode penjilat ke Pak Gerald. Kamu dimarahin habis-habisan di koridor kantor depan umum cuma biar Pak Raka kelihatan tegas di mata bos besar.", money: 0, energy: -20, hunger: -5 },
+            { text: "Kamu salah ketik satu huruf kecil di draf, Pak Raka langsung ngamuk, \"Kamu lulusan mana sih? Ngetik gini aja ceroboh!\" Rasanya ingin menghilang dari bumi.", money: 0, energy: -15, hunger: -5 },
+            { text: "Pak Raka mendadak memberikan tugas personal untuk mengantar jas miliknya ke laundry di luar kantor saat cuaca Jakarta lagi panas-panasnya.", money: 0, energy: -25, hunger: -10 },
+            { text: "AC di divisimu mati, Pak Raka malah ngomel, \"Jangan pada manja pakai kipas angin kertas, bikin pemandangan kantor jelek!\" Gerah dan lemas banget.", money: 0, energy: -15, hunger: -5 },
+            { text: "Pak Raka mendadak membatalkan izin pulang cepatmu, \"Urusan draf ini belum beres, kamu gak boleh pulang dulu!\" Kamu terpaksa pesan ojol malam hari.", money: -8000, energy: -15, hunger: -10 },
+            { text: "Selesai presentasi, Pak Raka langsung nyeletuk, \"Idemu biasa aja, kurang greget. Cari yang lain sana, besok pagi harus siap!\" Kamu terpaksa begadang lagi.", money: 0, energy: -20, hunger: -5 },
+            { text: "Pak Raka menuduhmu menghilangkan pulpen kesayangannya, \"Anak magang jangan suka lancang pinjam barang gak bilang ya!\" Padahal pulpennya terselip di kantongnya sendiri.", money: 0, energy: -10, hunger: 0 },
+            { text: "Pak Raka menyuruhmu merapikan gudang arsip agensi sendirian, \"Biar kamu tahu sejarah perusahaan, bersihkan sampai kinclong!\" Debu di mana-mana bikin bersin.", money: 0, energy: -20, hunger: -10 },
+            { text: "Kamu mengumpulkan tugas tepat waktu, tapi Pak Raka cuma melirik sinis, \"Cepat banget, pasti asal-asalan ya? Periksa lagi dari awal!\" Sungguh melelahkan.", money: 0, energy: -15, hunger: 0 },
+            { text: "Pak Raka meminjam powerbank milikmu tanpa izin, pas dikembalikan dayanya sudah habis total dan casing-nya lecet. Menyebalkan!", money: 0, energy: -10, hunger: 0 },
+            { text: "Pak Raka menyuruhmu mencetak dokumen setebal 200 halaman, pas selesai dia bilang, \"Eh salah dokumen, harusnya yang draf versi B. Buang aja itu, cetak ulang.\"", money: 0, energy: -15, hunger: -5 },
+            { text: "Kamu dituduh Pak Raka merusak estetika kubikal kantor hanya karena menaruh botol minum besar di atas meja kerja. Kamu dipaksa menyimpannya di bawah kaki.", money: 0, energy: -10, hunger: 0 },
+            { text: "Pak Raka menyuruhmu berdiri di dekat pintu masuk untuk menyambut klien penting, \"Berdiri yang tegak, tersenyum, jangan bikin malu Earfultime!\" Kaki pegal banget.", money: 0, energy: -15, hunger: -5 },
+            { text: "Niat hemat hancur karena Pak Raka mendadak menuntut iuran suvenir ulang tahun untuk dirinya sendiri, \"Minimal dua puluh ribu ya buat anak magang!\"", money: -20000, energy: -5, hunger: 0 },
+            { text: "Pak Raka menyindir gaya pakaianmu di depan anak-anak divisi lain, \"Anak magang sekarang gayanya kayak mau pergi liburan ya, kurang profesional.\"", money: 0, energy: -15, hunger: 0 },
+            { text: "Kamu terpaksa membelikan Pak Raka rokok di minimarket luar kantor karena dia malas jalan kaki, \"Pake duitmu dulu, besok saya ganti.\" Tapi zonk gak pernah diganti.", money: -25000, energy: -10, hunger: 0 },
+            { text: "Pak Raka mematikan musik yang sedang diputar di ruangan dengan kasar, \"Bikin berisik aja, fokus kerja jangan santai-santai!\" Suasana kerja langsung tegang.", money: 0, energy: -10, hunger: 0 },
+            { text: "Kamu dipaksa Pak Raka ikut lembur mengawasi jalannya syuting iklan sampai larut malam, padahal itu sama sekali bukan ranah divisimu harian.", money: 0, energy: -25, hunger: -15 }
+        ];
+
+        var positiveEvents = [
+            // THE COUNCILS: LAVEN, KEAN, ALYSSA, MANISHA
+            { text: "Alyssa lewat didepan kubikalmu sambil membawa bungkusan plastik, \"Hamlo! Aku lamgi makan cireng hangat nih, kamu mau gamk?\" Kamu dikasih satu porsi!", money: 0, energy: 10, hunger: 20 },
+            { text: "Laven mengajakmu ngopi santai di pantry sambil menceritakan lawakan garingnya. Lumayan bikin stres magangmu berkurang drastis.", money: 0, energy: 20, hunger: -5 },
+            { text: "Kean lagi konyol hari ini, dia mengajakmu taruhan gunting-batu-kertas di ruang tengah Councils. Kamu menang dan dapet traktiran e-wallet!", money: 15000, energy: 5, hunger: 0 },
+            { text: "Manisha tersenyum manis sekali ke arah kubikalmu sambil memberikan sebatang cokelat impor, \"Tetap semangat ya magangnya!\" Hatimu langsung meleleh.", money: 0, energy: 25, hunger: 10 },
+            { text: "Alyssa tiba-tiba mengirim chat telegram: \"Bimsa tolongin amku edit video short imi bentar gamk?\" Selesai bantu, kamu dikasih tips saldo e-wallet.", money: 15000, energy: -10, hunger: 0 },
+            { text: "Laven sengaja membelikan gorengan sekresek penuh buat anak-anak magang. Kamu kebagian tahu isi hangat yang nikmat banget.", money: 0, energy: 10, hunger: 15 },
+            { text: "Kean mengajakmu makan siang di warteg dekat kantor, \"Pake duit lu dulu ya bro nanti gw ganti saat gajian.\" Untung makanannya enak dan mengenyangkan.", money: -12000, energy: 10, hunger: 30 },
+            { text: "Kamu dipuji oleh Manisha di depan anggota Councils lainnya karena berhasil membantunya merapikan file presentasi pitching campaign klien baru.", money: 0, energy: 15, hunger: 0 },
+            { text: "Alyssa tiba-tiba berteriak ceria dari meja seberang, \"Kamliau jangan lupa badgeting ya hari imi!\" Mendengar suaranya yang lucu, mood kamu kembali naik.", money: 0, energy: 10, hunger: 0 },
+            { text: "Laven mengajakmu taruhan menebak skor pertandingan bola nanti malam. Tebakanmu benar, dapet duit cash langsung dari Laven!", money: 20000, energy: 5, hunger: 0 },
+            { text: "Manisha mengizinkanmu pulang 30 menit lebih awal karena tugas riset pasarmu dinilai sangat rapi dan lengkap.", money: 0, energy: 20, hunger: 0 },
+            { text: "Kean mendadak mentransfer uang lembur tim Councils, dan kamu sebagai anak magang yang membantunya ikut kecipratan bonus!", money: 25000, energy: 5, hunger: 0 },
+            { text: "Laven membantumu membela diri saat format laporanmu dipertanyakan, \"Aman, ini drafnya udah sesuai standar rilis kok.\" Kamu merasa sangat terbantu.", money: 0, energy: 15, hunger: 0 },
+            { text: "Alyssa membagikan kopi susu kekinian sisa properti syuting konten kreatif, \"Imi masi bersih kok, minum aja gamk usah malu!\"", money: 0, energy: 25, hunger: 5 },
+            { text: "Manisha membawakan oleh-oleh kue kering dari luar kota dan meletakkannya di meja komunal Councils. Kamu langsung mencicipinya.", money: 0, energy: 10, hunger: 15 },
+            
+            // EVENT KANTOR / REWARD UMUM LAINNYA
+            { text: "Pak Gerald mendadak melakukan sidak ke kantor. Beliau memuji kerapian hasil analisismu dan memberikan bonus tunai langsung!", money: 25000, energy: 10, hunger: 0 },
+            { text: "Vania VP HRD berjalan melewati kubikalmu. Sosoknya yang tegas, cantik, dan wangi parfum mewahnya membuatmu mendadak tegak penuh energi.", money: 0, energy: 20, hunger: 0 },
+            { text: "Ketemu abang tukang Nasi Goreng gerobak di dekat kantor. Karena perut sudah sangat keroncongan, kamu tergiur membeli porsi hemat.", money: -15000, energy: 10, hunger: 35 },
+            { text: "Ada Starling (Starbucks Keliling) lewat depan pagar kantor. Kamu membeli kopi es susu biar gak ngantuk saat menyusun data harian.", money: -6000, energy: 25, hunger: 5 },
+            { text: "Diajak anak-anak Earfultime jajan cilok bumbu kacang di depan gerbang kantor. Murah meriah tapi suasananya seru banget.", money: -5000, energy: 5, hunger: 15 },
+            { text: "Dompetmu terselip di sela sofa ruang santai kantor, pas diambil eh ternyata malah nemu uang lembaran lama kelipet rapi!", money: 10000, energy: 0, hunger: 0 },
+            { text: "Kamu gak sengaja menemukan promo flash sale aplikasi ojek online untuk makanan di sekitar kantor. Lumayan dapet diskon besar!", money: -8000, energy: 10, hunger: 25 },
+            { text: "Ada abang kelontong menjual batagor bumbu kacang enak banget dekat area parkir kantor. Kamu membeli satu bungkus.", money: -10000, energy: 10, hunger: 25 },
+            { text: "Pak Gerald tiba-tiba mengirimkan email apresiasi global ke semua tim kantor. Atmosfer lingkungan agensi jadi ceria dan positif.", money: 0, energy: 15, hunger: 0 },
+            { text: "Jalan kaki cari angin segar di sekitar taman kantor, malah ketemu kucing liar yang lucu banget. Lumayan menghilangkan stres.", money: 0, energy: 15, hunger: 0 }
+        ];
+
+        window.startGameNow = function() {
+            var inputNama = document.getElementById("player-name").value.trim();
+            if (inputNama === "") {
+                alert("Masukkan nama kamu terlebih dahulu!");
+                return;
+            }
+
+            window.gameState.name = inputNama;
+            window.gameState.divisi = document.getElementById("player-divisi").value;
+
+            document.getElementById("setup-screen").classList.add("hidden");
+            document.getElementById("game-screen").classList.remove("hidden");
+
+            document.getElementById("display-identity").innerText = window.gameState.name + " (" + window.gameState.divisi + ")";
+            document.getElementById("story-log").innerHTML = "Kamu diterima di <strong>Earfultime</strong> pada bagian <strong>" + window.gameState.divisi + "</strong>. Perusahaan media agensi yang cukup besar, rekan kerja santai dan kepala divisi juga tidak kalah suportif, kamu resmi jadi <strong>The Associates</strong>, tapi bosnya bikin kepala lepas.<br><br><em>Modal awalmu 50000. Jaga energi, kekenyangan, dan uangmu agar tidak bangkrut atau masuk rumah sakit selama 21 hari ke depan di Jakarta! (2 Langkah per hari).</em>";
+
+            renderTampilan();
+        };
+
+        function renderTampilan() {
+            document.getElementById("stat-money").innerText = window.gameState.money;
+            document.getElementById("stat-energy").innerText = window.gameState.energy + " / 100";
+            document.getElementById("stat-hunger").innerText = window.gameState.hunger + " / 100";
+            document.getElementById("stat-actions").innerText = window.gameState.actionsLeft;
+
+            if (window.gameState.energy <= 20) document.getElementById("stat-energy").classList.add("stat-danger");
+            else document.getElementById("stat-energy").classList.remove("stat-danger");
+
+            if (window.gameState.hunger <= 20) document.getElementById("stat-hunger").classList.add("stat-danger");
+            else document.getElementById("stat-hunger").classList.remove("stat-danger");
+
+            if (window.gameState.money <= 10000) document.getElementById("stat-money").classList.add("stat-danger");
+            else document.getElementById("stat-money").classList.remove("stat-danger");
+
+            document.getElementById("btn-work").disabled = window.gameState.hasWorkedToday;
+            document.getElementById("btn-eat").disabled = window.gameState.hasEatenToday;
+            document.getElementById("btn-rest").disabled = window.gameState.hasRestedToday;
+            document.getElementById("btn-snack").disabled = window.gameState.hasSnackedToday;
+
+            if (window.gameState.actionsLeft === 0) {
+                document.getElementById("action-board").classList.add("hidden");
+                document.getElementById("btn-next-day").classList.remove("hidden");
+            } else {
+                document.getElementById("action-board").classList.remove("hidden");
+                document.getElementById("btn-next-day").classList.add("hidden");
+            }
+
+            periksaKondisiKalah();
+        }
+
+        window.eksekusiAksi = function(jenisAksi) {
+            if (window.gameState.actionsLeft <= 0) return;
+
+            var teksLog = "";
+
+            if (jenisAksi === 'work') {
+                var gaji = Math.floor(Math.random() * 15001) + 15000;
+                window.gameState.money += gaji;
+                window.gameState.energy -= 25;
+                window.gameState.hunger -= 20;
+                window.gameState.hasWorkedToday = true;
+                teksLog = "💼 Kamu bekerja " + jobDescriptions[window.gameState.divisi] + ". Hasil kerja keras hari ini membuahkan uang saku sebesar <strong>" + gaji + "</strong>! Tapi badan rasanya capek dan mulai lapar.";
+            } 
+            else if (jenisAksi === 'eat') {
+                if (window.gameState.money < 15000) {
+                    alert("Uang kamu gak cukup untuk makan besar di warung sekitar kantor!");
+                    return;
+                }
+                window.gameState.money -= 15000;
+                window.gameState.hunger = Math.min(100, window.gameState.hunger + 50);
+                window.gameState.energy -= 10;
+                window.gameState.hasEatenToday = true;
+                teksLog = "🍲 Kamu memutuskan makan besar di warteg dekat kantor seharga <strong>15000</strong>. Perut terasa kenyang bertenaga, tapi entah kenapa malah jadi agak ngantuk.";
+            } 
+            else if (jenisAksi === 'rest') {
+                window.gameState.energy = Math.min(100, window.gameState.energy + 40);
+                window.gameState.hunger -= 25;
+                window.gameState.hasRestedToday = true;
+                teksLog = "🛌 Kamu mengambil waktu untuk istirahat tidur siang di bean bag pantry kantor. Energi kamu pulih drastis, tapi pas bangun perut melilit lapar!";
+            } 
+            else if (jenisAksi === 'snack') {
+                if (window.gameState.money < 6000) {
+                    alert("Uang kamu gak cukup buat sekadar jajan kopi atau cemilan kantin!");
+                    return;
+                }
+                window.gameState.money -= 6000;
+                window.gameState.hunger = Math.min(100, window.gameState.hunger + 15);
+                window.gameState.energy = Math.min(100, window.gameState.energy + 10);
+                window.gameState.hasSnackedToday = true;
+                teksLog = "🏪 Kamu jalan-jalan keluar gerbang kantor Earfultime untuk jajan snack ringan seharga <strong>6000</strong>. Lumayan buat ganjel perut.";
+            }
+
+            window.gameState.actionsLeft--;
+            document.getElementById("story-log").innerHTML = teksLog;
+            
+          
+            if (Math.random() < 0.5) {
+                pemicuEventAcak();
+            } else {
+                document.getElementById("event-box").classList.add("hidden");
+            }
+
+            renderTampilan();
+        };
+
+        function pemicuEventAcak() {
+            var ev;
+            var jenisPilihan = Math.random() < 0.5 ? "negatif" : "positif";
+
+            if (jenisPilihan === "negatif") {
+                var indexAcak = Math.floor(Math.random() * negativeEvents.length);
+                ev = negativeEvents[indexAcak];
+            } else {
+                var indexAcak = Math.floor(Math.random() * positiveEvents.length);
+                ev = positiveEvents[indexAcak];
+            }
+
+            window.gameState.money += ev.money;
+            window.gameState.energy = Math.max(0, Math.min(100, window.gameState.energy + ev.energy));
+            window.gameState.hunger = Math.max(0, Math.min(100, window.gameState.hunger + ev.hunger));
+
+            var infoUang = "";
+            if (ev.money > 0) infoUang = " (+" + ev.money + ")";
+            if (ev.money < 0) infoUang = " (" + ev.money + ")";
+
+            var box = document.getElementById("event-box");
+            if (jenisPilihan === "negatif") {
+                box.classList.remove("safe-event");
+            } else {
+                box.classList.add("safe-event");
+            }
+
+            document.getElementById("event-text").innerHTML = ev.text + " <strong style='color:#6366f1;'>" + infoUang + "</strong>";
+            box.classList.remove("hidden");
+        }
+
+        window.pindahHari = function() {
+            if (window.gameState.day >= 21) {
+                pemicuEndingSukses();
+                return;
+            }
+
+            window.gameState.day++;
+            window.gameState.actionsLeft = 2;
+            window.gameState.hasWorkedToday = false;
+            window.gameState.hasEatenToday = false;
+            window.gameState.hasRestedToday = false;
+            window.gameState.hasSnackedToday = false;
+
+            window.gameState.hunger -= 10;
+            window.gameState.energy -= 5;
+
+            document.getElementById("display-day").innerText = "Hari ke-" + window.gameState.day + " / 21";
+            document.getElementById("story-log").innerHTML = "🌞 Pagi baru telah tiba di kantor Earfultime. Hari ke-" + window.gameState.day + " magang dimulai! Sisa 2 langkah harianmu telah direset.";
+            document.getElementById("event-box").classList.add("hidden");
+
+            renderTampilan();
+        };
+
+        function periksaKondisiKalah() {
+            var detailAlasan = "";
+            var kalah = false;
+
+            if (window.gameState.hunger <= 0) {
+                detailAlasan = "kamu lapar dan masuk rumah sakit, kamu gak bisa kerja!";
+                kalah = true;
+            } else if (window.gameState.energy <= 0) {
+                detailAlasan = "kamu kelelahan ekstrem dan pingsan, kamu gak bisa kerja!";
+                kalah = true;
+            } else if (window.gameState.money < 0) {
+                detailAlasan = "uang habis terlilit utang di Jakarta, kamu gak bisa kerja!";
+                kalah = true;
+            }
+
+            if (kalah) {
+                document.getElementById("game-screen").classList.add("hidden");
+                document.getElementById("end-screen").classList.remove("hidden");
+                document.getElementById("end-title").style.color = "var(--danger-color)";
+                document.getElementById("end-title").innerText = "🚨 GAME OVER 🚨";
+                document.getElementById("end-message").innerHTML = "Maaf, perjalanan magangmu terhenti di Hari ke-" + window.gameState.day + ".<br><br><strong>Alasan:</strong> " + detailAlasan;
+                document.getElementById("success-link-container").innerHTML = "";
+            }
+        }
+
+        function pemicuEndingSukses() {
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("end-screen").classList.remove("hidden");
+            document.getElementById("end-title").style.color = "var(--success-color)";
+            document.getElementById("end-title").innerText = "🎉 INTERNSHIP COMPLETED 🎉";
+            
+            document.getElementById("end-message").innerHTML = "Terima kasih sudah bekerja bersama kami, <strong>" + window.gameState.name + "</strong>!<br>Kami bangga memiliki kamu sebagai bagian dari <strong>The Associates</strong> di Earfultime.<br><br>Sisa uang akhirmu: " + window.gameState.money + "<br><br>Silakan akses link folder di bawah ini untuk mengambil reward atau dokumen magang kamu:";
+            
+            document.getElementById("success-link-container").innerHTML = '<a class="drive-link" href="https://drive.google.com/drive/folders/1RsKcAI5FQqHpofm8W4Ad1HfB4xKZ5k68?usp=sharing" target="_blank">📁 Buka Bonus Milikmu</a>';
+        }
+
+        window.restartGame = function() {
+            window.gameState.day = 1;
+            window.gameState.money = 50000;
+            window.gameState.energy = 100;
+            window.gameState.hunger = 100;
+            window.gameState.actionsLeft = 2;
+            window.gameState.hasWorkedToday = false;
+            window.gameState.hasEatenToday = false;
+            window.gameState.hasRestedToday = false;
+            window.gameState.hasSnackedToday = false;
+
+            document.getElementById("end-screen").classList.add("hidden");
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("setup-screen").classList.remove("hidden");
+            
+            document.getElementById("player-name").value = "";
+            document.getElementById("success-link-container").innerHTML = "";
+            document.getElementById("event-box").classList.add("hidden");
+            document.getElementById("display-day").innerText = "Hari ke-1 / 21";
+        };
+    </script>
+</body>
+</html>
